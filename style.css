@@ -1,0 +1,38 @@
+h1{
+    color: rgb(244, 121, 255)
+}
+body{
+    background-color: rgb(0, 0, 0)
+}
+
+.color-1{
+    color: rgb(142, 255, 111)
+}
+
+#color{
+    color: rgba(135, 255, 43, 0.702)
+}
+
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: rgb(255, 0, 0);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+#headtable{
+    text-shadow: #4CAF50;
+    background-color: #6eff7a99;
+    color: #d000ff;
+}
+#columna1{
+    background-color: #f07bff;
+}
+#columna2{
+    background-color: #a7ff7b;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calculadora</title>
+        <style>
+            body{
+                background-color: #cecece;
+            }
+            .d-flex{
+                display: flex;
+            }
+            .m-auto{
+                margin: auto;
+            }
+            .contenedor{
+                width: 100vw;
+                height: 100vh;
+            }
+            td{
+                text-align: center;
+                vertical-align: middle;;
+            }
+            table button{
+                width: 25px;
+                height: 25px;
+            }
+            table{
+                margin: 2px;
+            }
+            .vBttn{
+                height: 54px;
+            }
+            .hBttn{
+                width: 54px;
+            }
+            input{
+                width: 90%;
+                margin: 2px;
+            }
+            .contenedor>div{
+                width: 120px;
+            }
+
+            div{
+                border: 1px solid rgb(255, 0, 0);
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="contenedor d-flex">
+            <div class="m-auto">
+                <input type="number" id="display" placeholder="0">
+                <table>
+                    <tr>
+                        <td><button type="button" onclick="setOperation('/')">/</button></td>
+                        <td><button type="button" onclick="setOperation('*')">*</button></td>
+                        <td><button type="button" onclick="setOperation('-')">-</button></td>
+                        <td><button type="button" onclick="clearDisplay()">C</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" onclick="setNumber(7)">7</button></td>
+                        <td><button type="button" onclick="setNumber(8)">8</button></td>
+                        <td><button type="button" onclick="setNumber(9)">9</button></td>
+                        <td  rowspan="2"><button class="vBttn" type="button" onclick="setOperation('+')">+</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" onclick="setNumber(4)">4</button></td>
+                        <td><button type="button" onclick="setNumber(5)">5</button></td>
+                        <td><button type="button" onclick="setNumber(6)">6</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" onclick="setNumber(1)">1</button></td>
+                        <td><button type="button" onclick="setNumber(2)">2</button></td>
+                        <td><button type="button" onclick="setNumber(3)">3</button></td>
+                        <td rowspan="2"><button class="vBttn" type="button" onclick="calcular()">=</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><button class="hBttn" type="button" onclick="setNumber(0)">0</button></td>
+                        <td><button type="button">.</button></td>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+    let numero = 0;
+    let operacion = "";
+    let resultadoPrevio = null;
+
+    function setNumber(num) {
+        if (resultadoPrevio !== null) {
+            clearDisplay();
+            resultadoPrevio = null;
+        }
+        document.getElementById("display").value += num;
+    }
+
+    function clearDisplay() {
+        document.getElementById("display").value = "";
+    }
+
+    function setDot() {
+        if (resultadoPrevio !== null) {
+            clearDisplay();
+            resultadoPrevio = null;
+        }
+        let display = document.getElementById("display").value;
+        if (!display.includes(".")) {
+            document.getElementById("display").value += ".";
+        }
+    }
+
+    function setOperation(op) {
+        if (resultadoPrevio !== null) {
+            numero = resultadoPrevio;
+            resultadoPrevio = null;
+        } else {
+            numero = document.getElementById("display").value;
+        }
+        document.getElementById("display").value = "";
+        operacion = op;
+    }
+
+    function calcular() {
+        let num2 = document.getElementById("display").value;
+        if (resultadoPrevio !== null) {
+            numero = resultadoPrevio;
+        }
+        let resultado = 0;
+        switch (operacion) {
+            case "+":
+                resultado = parseFloat(numero) + parseFloat(num2);
+                break;
+            case "-":
+                resultado = parseFloat(numero) - parseFloat(num2);
+                break;
+            case "*":
+                resultado = parseFloat(numero) * parseFloat(num2);
+                break;
+            case "/":
+                resultado = parseFloat(numero) / parseFloat(num2);
+                break;
+        }
+        document.getElementById("display").value = resultado;
+        resultadoPrevio = resultado;
+    }
+</script>
