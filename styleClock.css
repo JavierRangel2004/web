@@ -1,39 +1,35 @@
-
-.clock{
-    background-color: rgb(159, 159, 159);
+/* Default styles */
+.clock {
+    background-color: rgba(159, 159, 159, 0.581);
     border-radius: 12px;
     border: 2px solid black;
     box-shadow: inset 0 0 10px rgb(215, 114, 255);
-    width: 100%;
-    height: 100%;
     margin: 10px;
 }
 
-#txt{
+#txt {
     color: white;
     font-size: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     font-family: Arial, sans-serif;
     font-weight: bold;
 }
 
-#timer{
+#timer {
     color: white;
     font-size: 50px;
     text-align: center;
     font-family: Arial, sans-serif;
 }
 
-table{
-    width: 100%;
-    height: 100%;
-    margin: 20px; 
+table {
+    margin: 20px;
 }
 
-table button{
+table button,
+button {
     background-color: rgb(215, 114, 255);
     color: black;
     cursor: pointer;
@@ -44,16 +40,47 @@ table button{
     height: 100px;
 }
 
-button{
-    background-color: rgb(215, 114, 255);
-    color: black;
-    cursor: pointer;
-    border-radius: 12px;
-    border: 2px solid black;
-    box-shadow: inset 0 0 10px #000000;
+td {
+    height: 5rem;
+    width: 5rem;
 }
 
-td{
-    height: 20px;
-    width: 20px;
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    .clock {
+        width: 90%;
+        height: auto;
+    }
+
+    table {
+        margin: 10px;
+    }
+
+    table button,
+    button {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .clock {
+        width: 80%;
+        height: auto;
+    }
+
+    #txt,
+    #timer {
+        font-size: 12rem;
+    }
+
+    table {
+        margin: 5px;
+    }
+
+    table button,
+    button {
+        height: 6rem;
+        width: 6rem;
+    }
 }

@@ -1,0 +1,30 @@
+.symbol{
+    width: 2rem; 
+    height: 2rem; 
+    border-radius: 50%;
+    background-color: green; 
+    animation: GFG 5s infinite linear; 
+    text-align: center;
+}
+
+.circle{
+    width: 15rem;
+    height: 15rem;
+    background-color: #ff0000;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+
+@keyframes GFG { 
+    0% { 
+        transform: rotate(0deg) 
+            translateY(100px) rotate(0deg); 
+    } 
+
+    100% { 
+        transform: rotate(360deg) 
+            translateY(100px) rotate(-360deg); 
+    } 
+} 

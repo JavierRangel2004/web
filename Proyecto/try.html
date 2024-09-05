@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+
+<head> 
+	<title> 
+		How to move an element in a 
+		Circular Path using CSS ? 
+	</title> 
+	
+	<style> 
+		h1 { 
+			color: green; 
+			text-align: center; 
+		} 
+
+		h3 { 
+			text-align: center; 
+			margin-bottom: 100px; 
+		} 
+
+		.box { 
+			width: 50px; 
+			height: 50px; 
+			border-radius: 50%; 
+			margin: auto; 
+			background-color: green; 
+			animation: GFG 5s infinite linear; 
+		} 
+
+		@keyframes GFG { 
+			0% { 
+				transform: rotate(0deg) 
+					translateY(100px) rotate(0deg); 
+			} 
+
+			100% { 
+				transform: rotate(360deg) 
+					translateY(100px) rotate(-360deg); 
+			} 
+		} 
+	</style> 
+</head> 
+
+<body> 
+	<h1>GeeksforGeeks</h1> 
+
+	<h3> 
+		How to move an element in a 
+		Circular Path using CSS ? 
+	</h3> 
+
+	<div class="box"></div> 
+</body> 
+
+</html>

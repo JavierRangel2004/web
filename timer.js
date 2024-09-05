@@ -54,7 +54,9 @@ function setTime(timeType, op) {
                 m--;
                 if (m < 0) {
                     m = 59;
-                    h--;
+                    if (h > 0) {
+                        h--;
+                    }
                 }
             }
             break;
@@ -69,7 +71,9 @@ function setTime(timeType, op) {
                 s--;
                 if (s < 0) {
                     s = 59;
-                    m--;
+                    if (m > 0) {
+                        m--;
+                    }
                 }
             }
             break;
@@ -81,4 +85,40 @@ function updateDisplay() {
     document.getElementById('h').innerHTML = h < 10 ? '0' + h : h;
     document.getElementById('m').innerHTML = m < 10 ? '0' + m : m;
     document.getElementById('s').innerHTML = s < 10 ? '0' + s : s;
+}
+
+
+var timer = [0,0,0];
+
+function updateTimer(){
+    document.getElementById('h').innerHTML = timer[0] < 10 ? '0' + timer[0] : timer[0];
+    document.getElementById('m').innerHTML = timer[1] < 10 ? '0' + timer[1] : timer[1];
+    document.getElementById('s').innerHTML = timer[2] < 10 ? '0' + timer[2] : timer[2];
+}
+
+function move(pos, mod){
+    if(mod == '+'){
+        timer[pos]++;
+        if(pos == 0 && timer[pos] > 23){
+            timer[pos] = 0;
+        } else if(pos == 1 && timer[pos] > 59){
+            timer[pos] = 0;
+            timer[pos-1]++;
+        } else if(pos == 2 && timer[pos] > 59){
+            timer[pos] = 0;
+            timer[pos-1]++;
+        }
+    } else {
+        timer[pos]--;
+        if(pos == 0 && timer[pos] < 0){
+            timer[pos] = 23;
+        } else if(pos == 1 && timer[pos] < 0){
+            timer[pos] = 59;
+            timer[pos-1]--;
+        } else if(pos == 2 && timer[pos] < 0){
+            timer[pos] = 59;
+            timer[pos-1]--;
+        }
+    }
+    updateTimer();
 }
