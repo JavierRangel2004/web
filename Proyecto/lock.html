@@ -1,65 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Lock</title>
-    <link rel="stylesheet" type="text/css" href="css/lock.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzle de Runas</title>
+    <link rel="stylesheet" href="css/lock.css">
 </head>
 <body>
-    <!-- 5 circles lock (one inside each other) with 8 simbols around each circle and if the pattern is align the lock opens (ref win) -->
-    <div class="lock">
-        <div class="circle">
-            <div class="symbol">1</div>
-            <div class="symbol">2</div>
-            <div class="symbol">3</div>
-            <div class="symbol">4</div>
-            <div class="symbol">5</div>
-            <div class="symbol">6</div>
-            <div class="symbol">7</div>
-            <div class="symbol">8</div>
+    <div class="puzle-container">
+        <div class="circulo" id="circulo-1">
+            <div class="runa" style="--i: 0;">&#x16A0;</div>
+            <div class="runa" style="--i: 1;">&#x16A1;</div>
+            <div class="runa" style="--i: 2;">&#x16A2;</div>
+            <div class="runa" style="--i: 3;">&#x16A3;</div>
+            <div class="runa" style="--i: 4;">&#x16A4;</div>
+            <div class="runa" style="--i: 5;">&#x16A5;</div>
+            <div class="runa" style="--i: 6;">&#x16A6;</div>
+            <div class="runa" style="--i: 7;">&#x16A7;</div>
         </div>
-        <div class="circle">
-            <div class="symbol">1</div>
-            <div class="symbol">2</div>
-            <div class="symbol">3</div>
-            <div class="symbol">4</div>
-            <div class="symbol">5</div>
-            <div class="symbol">6</div>
-            <div class="symbol">7</div>
-            <div class="symbol">8</div>
+        <div class="circulo" id="circulo-2">
+            <div class="runa" style="--i: 0;">&#x16A8;</div>
+            <div class="runa" style="--i: 1;">&#x16A9;</div>
+            <div class="runa" style="--i: 2;">&#x16AA;</div>
+            <div class="runa" style="--i: 3;">&#x16AB;</div>
+            <div class="runa" style="--i: 4;">&#x16AC;</div>
+            <div class="runa" style="--i: 5;">&#x16AD;</div>
+            <div class="runa" style="--i: 6;">&#x16AE;</div>
+            <div class="runa" style="--i: 7;">&#x16AF;</div>
         </div>
-        <div class="circle">
-            <div class="symbol">1</div>
-            <div class="symbol">2</div>
-            <div class="symbol">3</div>
-            <div class="symbol">4</div>
-            <div class="symbol">5</div>
-            <div class="symbol">6</div>
-            <div class="symbol">7</div>
-            <div class="symbol">8</div>
+        <div class="circulo" id="circulo-3">
+            <div class="runa" style="--i: 0;">&#x16B0;</div>
+            <div class="runa" style="--i: 1;">&#x16B1;</div>
+            <div class="runa" style="--i: 2;">&#x16B2;</div>
+            <div class="runa" style="--i: 3;">&#x16B3;</div>
+            <div class="runa" style="--i: 4;">&#x16B4;</div>
+            <div class="runa" style="--i: 5;">&#x16B5;</div>
+            <div class="runa" style="--i: 6;">&#x16B6;</div>
+            <div class="runa" style="--i: 7;">&#x16B7;</div>
         </div>
-        <div class="circle">
-            <div class="symbol">1</div>
-            <div class="symbol">2</div>
-            <div class="symbol">3</div>
-            <div class="symbol">4</div>
-            <div class="symbol">5</div>
-            <div class="symbol">6</div>
-            <div class="symbol">7</div>
-            <div class="symbol">8</div>
+        <div class="circulo" id="circulo-4">
+            <div class="runa" style="--i: 0;">&#x16B8;</div>
+            <div class="runa" style="--i: 1;">&#x16B9;</div>
+            <div class="runa" style="--i: 2;">&#x16BA;</div>
+            <div class="runa" style="--i: 3;">&#x16BB;</div>
+            <div class="runa" style="--i: 4;">&#x16BC;</div>
+            <div class="runa" style="--i: 5;">&#x16BD;</div>
+            <div class="runa" style="--i: 6;">&#x16BE;</div>
+            <div class="runa" style="--i: 7;">&#x16BF;</div>
         </div>
-        <div class="circle">
-            <div class="symbol">1</div>
-            <div class="symbol">2</div>
-            <div class="symbol">3</div>
-            <div class="symbol">4</div>
-            <div class="symbol">5</div>
-            <div class="symbol">6</div>
-            <div class="symbol">7</div>
-            <div class="symbol">8</div>
+        <div class="circulo" id="circulo-5">
+            <div class="runa" style="--i: 0;">&#x16C0;</div>
+            <div class="runa" style="--i: 1;">&#x16C1;</div>
+            <div class="runa" style="--i: 2;">&#x16C2;</div>
+            <div class="runa" style="--i: 3;">&#x16C3;</div>
+            <div class="runa" style="--i: 4;">&#x16C4;</div>
+            <div class="runa" style="--i: 5;">&#x16C5;</div>
+            <div class="runa" style="--i: 6;">&#x16C6;</div>
+            <div class="runa" style="--i: 7;">&#x16C7;</div>
         </div>
     </div>
 
+    <div class="controles">
+        <button id="arriba">Arriba</button>
+        <button id="abajo">Abajo</button>
+    </div>
 
-    <a class="button" href="win.html"><button>Click me</button></a>
-
+    <script src="js/lock.js"></script>
+</body>
 </html>
