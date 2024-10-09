@@ -1,4 +1,0 @@
-spanning-tree vlan 10 priority 4096
-spanning-tree vlan 1 root primary
-spanning-tree vlan 20 priority 4096
-

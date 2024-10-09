@@ -1,0 +1,35 @@
+body {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 00vh;
+    margin: 0;
+    background-image: url(../assets/Stone2.jpg);
+    color: rgba(137, 88, 24, 0.58);
+}
+
+.circulos1_5 {
+  background-image: url("../assets/Stone2.jpg");
+  box-shadow: 0px 0px 10px 0px #000;
+  cursor: pointer;
+  border-style: solid;
+  border-color: #3c3a3c;
+}
+.circulos1_5:hover {
+  box-shadow: 0px 0px 10px 2px #4172e4;
+  cursor: pointer;
+  transition: 0.5s ease;
+  border-color: #557fdb;
+}
+
+.buttones {
+  background-image: url("../assets/Stone2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: auto;
+  height: 35px;
+  box-shadow: 0px 0px 10px 0px #000;
+  color: #3c3a3c;
+  margin-left: 800px;
+}
