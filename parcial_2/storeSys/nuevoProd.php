@@ -28,7 +28,7 @@
     <div class="form-container">
         <div class="form-box">
             <h1>Agregar Nuevo Producto</h1>
-            <form action="./components/guardar.php" method="post">
+            <div>
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre del Producto:</label>
                     <input type="text" id="nombre" name="nombre" class="form-control" required>
@@ -41,9 +41,9 @@
                     <label for="precio" class="form-label">Precio:</label>
                     <input type="number" step="0.01" id="precio" name="precio" class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-success">Agregar</button>
+                <button type="button" onclick="guardarProducto()" class="btn btn-success">Agregar</button>
                 <button type="button" class="btn btn-danger" id="cancelBtn">Cancelar</button>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -65,10 +65,31 @@
             </div>
         </div>
     </div>
-
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
+        function guardarProducto(){
+            let config = {
+                url: './components/guardar.php',
+                method: 'POST',
+                data: {
+                    'nombre':$('#nombre').val(),
+                    'cantidad':$('#cantidad').val(),
+                    'precio':$('#precio').val()
+                },
+                success: (response) => {
+                    console.log(response);
+                    alert('Producto guardado exitosamente');
+                    document.querySelector('form').reset();
+                },
+                error: (xhr,status,error) => {
+                    console.error(error);
+                    alert('Ocurrió un error al guardar el producto');
+                }
+            };
+            $.ajax(config);
         // Abrir el modal al hacer clic en "Cancelar"
         document.getElementById('cancelBtn').addEventListener('click', function() {
             var cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));

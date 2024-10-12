@@ -1,0 +1,19 @@
+
+.contenedor {
+    position: relative;
+    top: 100px;
+    height: calc(100vh - 100px);
+    width: 100vw;
+}
+
+.bg-green{
+    background-color: darkgreen;
+}
+
+.bg-white{
+    background-color: white;
+}
+
+.my-input{
+    width:80px;
+}

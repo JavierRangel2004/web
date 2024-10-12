@@ -20,7 +20,5 @@ file_put_contents($path, json_encode($productos, JSON_PRETTY_PRINT));
 
 var_dump($productos);
 var_dump($_POST);
-// Redirigir a la página de tablas.php para ver el listado de productos
-header('Location: ./../db/tablas.php');
-exit();
+
 ?>
