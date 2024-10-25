@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="bg-dark">
+    <div class="container-fluid">
+        <div class="mx-auto mt-3 p-5">
+            <h2 style="color: #9454b4;">Ad / Asesorías / Dashboard</h2>
+            <h4 class="text-white">Filtros</h4>
+
+            <form id="filter-form" class="row mb-3 needs-validation p-3" novalidate>
+                <div class="col-md-3 d-flex align-items-center gap-2">
+                    <label for="datepicker-inicio" class="text-white me-2">Desde:</label>
+                    <input id="datepicker-inicio" 
+                           type="date"
+                           class="form-control rounded-pill text-white bg-secondary border-0 px-3 flex-grow-1" 
+                           style="height: 45px;">
+                    <button id="clear-date-inicio" 
+                            class="btn btn-secondary d-flex align-items-center justify-content-center" 
+                            style="width: 45px; height: 45px;" type="button">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </div>
+
+                <div class="col-md-3 d-flex align-items-center gap-2">
+                    <label for="datepicker-fin" class="text-white me-2">Hasta:</label>
+                    <input id="datepicker-fin" 
+                           type="date"
+                           class="form-control rounded-pill text-white bg-secondary border-0 px-3 flex-grow-1" 
+                           style="height: 45px;">
+                    <button id="clear-date-fin" 
+                            class="btn btn-secondary d-flex align-items-center justify-content-center" 
+                            style="width: 45px; height: 45px;" type="button">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-center gap-2">
+                    <div class="rounded-pill d-flex align-items-center px-3 bg-secondary flex-grow-1" 
+                        style="height: 45px;">
+                        <span class="fw-bold me-2" style="color:#b49654">Talent:</span>
+                        <select id="asesores-select" class="form-select border-0 bg-transparent text-white" 
+                                style="height: 100%; flex-grow: 1;">
+                            <option selected disabled value="">Seleccione un miembro</option>
+                        </select>
+                    </div>
+                    <button id="limpiar-button" class="btn rounded-pill bi bi-trash-fill d-flex align-items-center justify-content-center text-white" 
+                            style="background-color: #b0a9a9; height: 45px; width: 130px;" type="button">
+                        Limpiar
+                    </button>
+                </div>
+
+                <!-- Selector de Sedes (ahora permite múltiples selecciones) -->
+                <div class="col-md-6 d-flex align-items-center gap-2 mt-3">
+                    <div class="rounded-pill d-flex align-items-center px-3 bg-secondary w-100" 
+                        style="height: 45px;">
+                        <span class="fw-bold me-2" style="color:#b49654">Sede:</span>
+                        <select id="sedes-select" class="form-select border-0 bg-transparent text-white" 
+                                style="height: 100%; flex-grow: 1;">
+                            <option selected disabled value="">Seleccione una sede</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Selector de Categorías (ahora permite múltiples selecciones) -->
+                <div class="col-md-6 d-flex align-items-center gap-2 mt-3">
+                    <div class="rounded-pill d-flex align-items-center px-3 bg-secondary flex-grow-1" 
+                        style="height: 45px;">
+                        <span class="fw-bold me-2" style="color:#b49654">Categorías:</span>
+                        <select id="categorias-select" class="form-select border-0 bg-transparent text-white" 
+                                style="height: 100%; flex-grow: 1;">
+                            <option selected disabled value="">Seleccione una categoría</option>
+                        </select>
+                    </div>
+                
+                    <button class="btn rounded-pill bi bi-search d-flex align-items-center justify-content-center text-white" 
+                            style="background-color: #b49654; height: 45px; width: 130px;" type="submit">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+
+            <!-- Sección de Intervalo de Fechas y Miembros Talent -->
+            <div id="filter-tags" class="row mb-3">
+                <div class="col-md-6">
+                    <div id="fecha-intervalo" class="text-white">
+                        <!-- Se mostrará el intervalo de fechas seleccionado -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="filtros-tags" class="d-flex flex-wrap gap-2">
+                        <!-- Se mostrarán los asesores seleccionados -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cinta de resumen -->
+            <div class="row mb-3 d-flex justify-content-center rounded-4 p-3" style="background-color: #b49654">
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="totalSesiones" class="text-white text-center">0</h2>
+                    <span class="text-white text-center">Sesiones</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="totalHorasProfesor" class="text-white text-center">00:00</h2>
+                    <span class="text-white text-center">Total Hrs. Profesor</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="duracionMediaSesion" class="text-white text-center">00:00</h2>
+                    <span class="text-white text-center">Duración Media Sesión</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="totalHorasTalent" class="text-white text-center">00:00</h2>
+                    <span class="text-white text-center">Total Hrs. Talent</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="profesoresUnicos" class="text-white text-center">0</h2>
+                    <span class="text-white text-center">Profesores</span>
+                </div>
+            </div>
+
+           <!-- Pestañas de Bootstrap -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="resultados-tab" data-bs-toggle="tab" href="#resultados" role="tab" aria-controls="resultados" aria-selected="true">Resultados</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                <a class="nav-link" id="categorias-tab" data-bs-toggle="tab" href="#categorias" role="tab" aria-controls="categorias" aria-selected="false">Categorías</a>
+                </li>
+                <!-- Nueva pestaña Asesores -->
+                <li class="nav-item" role="presentation">
+                <a class="nav-link" id="asesores-tab" data-bs-toggle="tab" href="#asesores" role="tab" aria-controls="asesores" aria-selected="false">Asesores</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="myTabContent">
+                <!-- Contenido de la pestaña Resultados -->
+                <div class="tab-pane fade show active" id="resultados" role="tabpanel" aria-labelledby="resultados-tab">
+                <h4 class="text-white mt-4">Resultados</h4>
+                <table id="results-table" class="table table-striped table-dark">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Correo</th>
+                        <th>Fecha</th>
+                        <th>Duración</th>
+                        <th>Categoría</th>
+                        <th>Asesor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Aquí se insertarán los resultados -->
+                    </tbody>
+                </table>
+                </div>
+            
+                <!-- Contenido de la pestaña Categorías -->
+                <div class="tab-pane fade" id="categorias" role="tabpanel" aria-labelledby="categorias-tab">
+                <h4 class="text-white mt-4">Categorías</h4>
+                <table id="categorias-results" class="table table-striped table-dark">
+                    <thead>
+                    <tr>
+                        <th>Llave</th>
+                        <th>Nombre</th>
+                        <th>Sesiones</th>
+                        <th>Profesores</th>
+                        <th>Total Horas Prof</th>
+                        <th>Total Horas Talent</th>
+                        <th>Duración Media Prof</th>
+                        <th>Duración Media Talent</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                </div>
+
+                <!-- Contenido de la pestaña Asesores -->
+                <div class="tab-pane fade" id="asesores" role="tabpanel" aria-labelledby="asesores-tab">
+                    <h4 class="text-white mt-4">Asesores</h4>
+                    <table id="asesores-results" class="table table-striped table-dark">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Sesiones</th>
+                            <th>Total Horas Prof</th>
+                            <th>Total Horas Talent</th>
+                            <th>Duración Media Prof</th>
+                            <th>Duración Media Talent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+  
+
+        </div>
+    </div>
+
+            <!-- Incluye jQuery -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Tu script -->
+            <script src="js/script.js"></script>
+        </div>
+    </div>
+</body>
+</html>
