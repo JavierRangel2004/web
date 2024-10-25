@@ -82,7 +82,7 @@ if (!empty($sedes)) {
     $types .= str_repeat('i', count($sedes));
 }
 
-// Aplicar filtro de categorías (si se desea filtrar también en categorias.php)
+// Aplicar filtro de categorías
 if (!empty($categoriasFilter)) {
     $placeholders = implode(',', array_fill(0, count($categoriasFilter), '?'));
     $query .= " AND categoria.ID IN ($placeholders)";

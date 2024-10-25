@@ -17,22 +17,19 @@ if (!is_array($data)) {
 
 $fechaInicio = isset($data['fechaInicio']) ? $data['fechaInicio'] : null;
 $fechaFin = isset($data['fechaFin']) ? $data['fechaFin'] : null;
-$asesores = isset($data['asesores']) ? $data['asesores'] : [];
+$asesoresFilter = isset($data['asesores']) ? $data['asesores'] : [];
 $sedes = isset($data['sedes']) ? $data['sedes'] : [];
 $categorias = isset($data['categorias']) ? $data['categorias'] : [];
 
-// Inicializar el arreglo de asesores
+// Inicializar variables
 $asesoresData = [];
+$totalHorasProfesorMinutos = 0;
+$totalHorasTalentMinutos = 0;
 
-// Construir la consulta con filtros
-$query = "
+// Construir la consulta para obtener los totales
+$totalQuery = "
     SELECT 
-        asesor.Nombre,
-        COUNT(DISTINCT asesoria.ID) AS Sesiones,
-        SUM(asesoria.Duracion) AS TotalHorasProfesor,
-        SUM(asesoria.Duracion) AS TotalHorasTalent,
-        (SUM(asesoria.Duracion) / COUNT(DISTINCT asesoria.ID)) AS DuracionMediaProfesor,
-        (SUM(asesoria.Duracion) / COUNT(DISTINCT asesoria.ID)) AS DuracionMediaTalent
+        SUM(asesoria.Duracion) AS TotalHoras
     FROM 
         asesoria
     JOIN 
@@ -47,6 +44,85 @@ $query = "
         1=1
 ";
 
+// Inicializar parámetros
+$params = [];
+$types = '';
+
+// Aplicar filtros
+if (!empty($fechaInicio)) {
+    $totalQuery .= " AND asesoria.Fecha >= ?";
+    $params[] = $fechaInicio;
+    $types .= 's';
+}
+if (!empty($fechaFin)) {
+    $totalQuery .= " AND asesoria.Fecha <= ?";
+    $params[] = $fechaFin;
+    $types .= 's';
+}
+if (!empty($asesoresFilter)) {
+    $placeholders = implode(',', array_fill(0, count($asesoresFilter), '?'));
+    $totalQuery .= " AND asesor.ID IN ($placeholders)";
+    $params = array_merge($params, $asesoresFilter);
+    $types .= str_repeat('i', count($asesoresFilter));
+}
+if (!empty($sedes)) {
+    $placeholders = implode(',', array_fill(0, count($sedes), '?'));
+    $totalQuery .= " AND sedes.ID IN ($placeholders)";
+    $params = array_merge($params, $sedes);
+    $types .= str_repeat('i', count($sedes));
+}
+if (!empty($categorias)) {
+    $placeholders = implode(',', array_fill(0, count($categorias), '?'));
+    $totalQuery .= " AND categoria.ID IN ($placeholders)";
+    $params = array_merge($params, $categorias);
+    $types .= str_repeat('i', count($categorias));
+}
+
+// Preparar y ejecutar la consulta para totales
+$stmtTotal = $conn->prepare($totalQuery);
+
+if (!$stmtTotal) {
+    echo json_encode(['error' => $conn->error]);
+    exit;
+}
+
+if (!empty($params)) {
+    $stmtTotal->bind_param($types, ...$params);
+}
+
+$stmtTotal->execute();
+$resultTotal = $stmtTotal->get_result();
+
+if ($rowTotal = $resultTotal->fetch_assoc()) {
+    $totalHorasProfesorMinutos = $rowTotal['TotalHoras'];
+    $totalHorasTalentMinutos = $rowTotal['TotalHoras'];
+}
+
+$stmtTotal->close();
+
+// Construir la consulta para obtener datos por asesor
+$query = "
+    SELECT 
+        asesor.Correo,
+        asesor.Nombre,
+        SUM(asesoria.Duracion) AS TotalHorasTalent,
+        COUNT(DISTINCT asesoria.ID) AS Sesiones,
+        (SUM(asesoria.Duracion) / COUNT(DISTINCT asesoria.ID)) AS DuracionMediaSesion
+    FROM 
+        asesoria
+    JOIN 
+        asesoria_asesor ON asesoria.ID = asesoria_asesor.id_Asesoria
+    JOIN 
+        asesor ON asesoria_asesor.id_Asesor = asesor.ID
+    JOIN 
+        categoria ON asesoria.id_Categoria = categoria.ID
+    JOIN 
+        sedes ON asesoria.id_Sede = sedes.ID
+    WHERE 
+        1=1
+";
+
+// Reiniciar parámetros
 $params = [];
 $types = '';
 
@@ -61,11 +137,11 @@ if (!empty($fechaFin)) {
     $params[] = $fechaFin;
     $types .= 's';
 }
-if (!empty($asesores)) {
-    $placeholders = implode(',', array_fill(0, count($asesores), '?'));
+if (!empty($asesoresFilter)) {
+    $placeholders = implode(',', array_fill(0, count($asesoresFilter), '?'));
     $query .= " AND asesor.ID IN ($placeholders)";
-    $params = array_merge($params, $asesores);
-    $types .= str_repeat('i', count($asesores));
+    $params = array_merge($params, $asesoresFilter);
+    $types .= str_repeat('i', count($asesoresFilter));
 }
 if (!empty($sedes)) {
     $placeholders = implode(',', array_fill(0, count($sedes), '?'));
@@ -98,19 +174,27 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 while ($row = $result->fetch_assoc()) {
+    $totalHorasAsesorMinutos = $row['TotalHorasTalent'];
     // Formatear las horas a "HH:MM"
-    $totalHorasProfesor = floor($row['TotalHorasProfesor'] / 60) . ':' . str_pad($row['TotalHorasProfesor'] % 60, 2, '0', STR_PAD_LEFT);
     $totalHorasTalent = floor($row['TotalHorasTalent'] / 60) . ':' . str_pad($row['TotalHorasTalent'] % 60, 2, '0', STR_PAD_LEFT);
-    $duracionMediaProfesor = floor($row['DuracionMediaProfesor'] / 60) . ':' . str_pad(round($row['DuracionMediaProfesor'] % 60), 2, '0', STR_PAD_LEFT);
-    $duracionMediaTalent = floor($row['DuracionMediaTalent'] / 60) . ':' . str_pad(round($row['DuracionMediaTalent'] % 60), 2, '0', STR_PAD_LEFT);
+    $duracionMediaSesion = floor($row['DuracionMediaSesion'] / 60) . ':' . str_pad(round($row['DuracionMediaSesion'] % 60), 2, '0', STR_PAD_LEFT);
+
+    // Calcular porcentajes
+    $porcentajeHorasProf = $totalHorasProfesorMinutos > 0 ? ($totalHorasAsesorMinutos / $totalHorasProfesorMinutos) * 100 : 0;
+    $porcentajeHorasTalent = $totalHorasTalentMinutos > 0 ? ($totalHorasAsesorMinutos / $totalHorasTalentMinutos) * 100 : 0;
+
+    // Separar el nombre en Nombres y Apellidos
+    $nombresApellidos = separarNombre($row['Nombre']);
 
     $asesoresData[] = [
-        'Nombre' => $row['Nombre'],
+        'Correo' => $row['Correo'],
+        'Nombres' => $nombresApellidos['nombres'],
+        'Apellidos' => $nombresApellidos['apellidos'],
         'Sesiones' => $row['Sesiones'],
-        'TotalHorasProfesor' => $totalHorasProfesor,
         'TotalHorasTalent' => $totalHorasTalent,
-        'DuracionMediaProfesor' => $duracionMediaProfesor,
-        'DuracionMediaTalent' => $duracionMediaTalent
+        'DuracionMediaSesion' => $duracionMediaSesion,
+        'PorcentajeHorasProf' => round($porcentajeHorasProf, 2) . '%',
+        'PorcentajeHorasTalent' => round($porcentajeHorasTalent, 2) . '%'
     ];
 }
 
@@ -119,4 +203,21 @@ $conn->close();
 
 // Devolver los resultados como JSON
 echo json_encode($asesoresData);
+
+// Función para separar Nombres y Apellidos
+function separarNombre($nombreCompleto) {
+    $partes = explode(' ', trim($nombreCompleto));
+
+    if (count($partes) <= 2) {
+        // Si solo hay dos partes, asumimos que es "Nombre Apellido"
+        $nombres = $partes[0];
+        $apellidos = isset($partes[1]) ? $partes[1] : '';
+    } else {
+        // Si hay más de dos partes, asumimos que los primeros dos son nombres y el resto apellidos
+        $nombres = $partes[0] . ' ' . $partes[1];
+        $apellidos = implode(' ', array_slice($partes, 2));
+    }
+
+    return ['nombres' => $nombres, 'apellidos' => $apellidos];
+}
 ?>

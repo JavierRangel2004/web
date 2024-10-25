@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data.forEach(function(asesor) {
             var option = document.createElement('option');
             option.value = asesor.ID;
-            option.textContent = asesor.Nombre;
+            option.textContent = asesor.Nombres + ' ' + asesor.Apellidos;
             asesoresSelect.appendChild(option);
         });
     })
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(filtrosCategorias)
+            body: JSON.stringify(filters)
         })
         .then(response => {
             if (!response.ok) {
@@ -312,12 +312,43 @@ document.addEventListener('DOMContentLoaded', function() {
         search();
     });
 
+    
+
     function updateCinta(summary) {
-        document.getElementById('totalSesiones').textContent = summary.totalSesiones;
-        document.getElementById('totalHorasProfesor').textContent = summary.totalHorasProfesor;
-        document.getElementById('duracionMediaSesion').textContent = summary.duracionMediaSesion;
-        document.getElementById('totalHorasTalent').textContent = summary.totalHorasTalent;
-        document.getElementById('profesoresUnicos').textContent = summary.profesoresUnicos;
+        const cintaElement = document.querySelector('.cinta-resumen');
+
+        if (summary.totalSesiones === 0) {
+            // Mostrar mensaje de alerta en la cinta
+            cintaElement.innerHTML = `
+                <div class="col-12 text-center">
+                    <h4 class="text-white">No se encontraron resultados con los filtros seleccionados.</h4>
+                </div>
+            `;
+        } else {
+            // Restaurar la cinta con los datos
+            cintaElement.innerHTML = `
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="totalSesiones" class="text-white text-center">${summary.totalSesiones}</h2>
+                    <span class="text-white text-center">Sesiones</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="totalHorasProfesor" class="text-white text-center">${summary.totalHorasProfesor}</h2>
+                    <span class="text-white text-center">Total Hrs. Profesor</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="duracionMediaSesion" class="text-white text-center">${summary.duracionMediaSesion}</h2>
+                    <span class="text-white text-center">Duración Media Sesión</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="totalHorasTalent" class="text-white text-center">${summary.totalHorasTalent}</h2>
+                    <span class="text-white text-center">Total Hrs. Talent</span>
+                </div>
+                <div class="col-sm-2 d-flex flex-column align-items-center">
+                    <h2 id="profesoresUnicos" class="text-white text-center">${summary.profesoresUnicos}</h2>
+                    <span class="text-white text-center">Profesores</span>
+                </div>
+            `;
+        }
     }
 
     function updateResultsTable(results) {
@@ -325,137 +356,180 @@ document.addEventListener('DOMContentLoaded', function() {
         // Limpiar la tabla
         tableBody.innerHTML = '';
 
-        // Agrupar asesores por ID de asesoría
-        const asesoriasMap = {};
-        results.forEach(result => {
-            const id = result.ID;
-            if (!asesoriasMap[id]) {
-                asesoriasMap[id] = { ...result, Asesores: [] };
+        const alertContainer = document.querySelector('#resultados .alert-container');
+        if (alertContainer) {
+            alertContainer.remove();
+        }
+        const alertDiv = document.createElement('div');
+        if (results.length === 0) {
+            alertDiv.className = 'alert alert-warning mt-3';
+            alertDiv.textContent = 'No se encontraron resultados con los filtros seleccionados.';
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.appendChild(alertDiv);
+        } else {
+            //delete alert div if exists
+            const alertDiv = document.querySelector('.alert');
+            if (alertDiv) {
+                alertDiv.remove();
             }
-            asesoriasMap[id].Asesores.push(result.Asesor);
-        });
+            results.forEach(asesoria => {
+                const row = document.createElement('tr');
 
-        // Recorrer las asesorías agrupadas y agregarlas a la tabla
-        Object.values(asesoriasMap).forEach(asesoria => {
-            const row = document.createElement('tr');
+                const idCell = document.createElement('td');
+                idCell.textContent = asesoria.ID;
 
-            const idCell = document.createElement('td');
-            idCell.textContent = asesoria.ID;
+                const correoCell = document.createElement('td');
+                correoCell.textContent = asesoria.Correo;
 
-            const correoCell = document.createElement('td');
-            correoCell.textContent = asesoria.Correo;
+                const fechaCell = document.createElement('td');
+                fechaCell.textContent = asesoria.Fecha;
 
-            const fechaCell = document.createElement('td');
-            fechaCell.textContent = asesoria.Fecha;
+                const duracionCell = document.createElement('td');
+                duracionCell.textContent = asesoria.Duracion;
 
-            const duracionCell = document.createElement('td');
-            duracionCell.textContent = asesoria.Duracion;
+                const categoriaCell = document.createElement('td');
+                categoriaCell.textContent = asesoria.Categoria;
 
-            const categoriaCell = document.createElement('td');
-            categoriaCell.textContent = asesoria.Categoria;
+                const asesoresCell = document.createElement('td');
+                asesoresCell.textContent = asesoria.Asesores;
 
-            const asesoresCell = document.createElement('td');
-            asesoresCell.textContent = asesoria.Asesores.join(', ');
+                row.appendChild(idCell);
+                row.appendChild(correoCell);
+                row.appendChild(fechaCell);
+                row.appendChild(duracionCell);
+                row.appendChild(categoriaCell);
+                row.appendChild(asesoresCell);
 
-            row.appendChild(idCell);
-            row.appendChild(correoCell);
-            row.appendChild(fechaCell);
-            row.appendChild(duracionCell);
-            row.appendChild(categoriaCell);
-            row.appendChild(asesoresCell);
-
-            tableBody.appendChild(row);
-        });
+                tableBody.appendChild(row);
+            });
+        }
     }
 
     function updateCategoriaResultsTable(data) {
         const tableBody = document.querySelector('#categorias-results tbody');
         tableBody.innerHTML = ''; // Limpiar la tabla antes de actualizar
 
-        console.log('Datos recibidos para la tabla de categorías:', data);
+        const alertContainer = document.querySelector('#categorias .alert-container');
+        if (alertContainer) {
+            alertContainer.remove();
+        }
+        const alertDiv = document.createElement('div');
+        if (data.length === 0) {
+            alertDiv.className = 'alert alert-warning mt-3';
+            alertDiv.textContent = 'No se encontraron resultados con los filtros seleccionados.';
+            const categoriasDiv = document.getElementById('categorias');
+            categoriasDiv.appendChild(alertDiv);
+        } else {
+            //delete alert div if exists
+            const alertDiv = document.querySelector('.alert');
+            if (alertDiv) {
+                alertDiv.remove();
+            }
+            data.forEach(item => {
+                const row = document.createElement('tr');
 
-        data.forEach(item => {
+                const llaveCell = document.createElement('td');
+                llaveCell.textContent = item.Llave || 'N/A';  // Usa 'N/A' si no hay valor
 
-            const row = document.createElement('tr');
+                const nombreCell = document.createElement('td');
+                nombreCell.textContent = item.Nombre || 'N/A';
 
-            const llaveCell = document.createElement('td');
-            llaveCell.textContent = item.Llave || 'N/A';  // Usa 'N/A' si no hay valor
+                const sesionesCell = document.createElement('td');
+                sesionesCell.textContent = item.Sesiones || 'N/A';
 
-            const nombreCell = document.createElement('td');
-            nombreCell.textContent = item.Nombre || 'N/A';
+                const profesoresCell = document.createElement('td');
+                profesoresCell.textContent = item.Profesores || 'N/A';
 
-            const sesionesCell = document.createElement('td');
-            sesionesCell.textContent = item.Sesiones || 'N/A';
+                const totalHorasProfCell = document.createElement('td');
+                totalHorasProfCell.textContent = item.TotalHorasProfesor || 'N/A';
 
-            const profesoresCell = document.createElement('td');
-            profesoresCell.textContent = item.Profesores || 'N/A';
+                const totalHorasTalentCell = document.createElement('td');
+                totalHorasTalentCell.textContent = item.TotalHorasTalent || 'N/A';
 
-            const totalHorasProfCell = document.createElement('td');
-            totalHorasProfCell.textContent = item.TotalHorasProfesor || 'N/A';
+                const duracionMediaProfCell = document.createElement('td');
+                duracionMediaProfCell.textContent = item.DuracionMediaProfesor || 'N/A';
 
-            const totalHorasTalentCell = document.createElement('td');
-            totalHorasTalentCell.textContent = item.TotalHorasTalent || 'N/A';
+                const duracionMediaTalentCell = document.createElement('td');
+                duracionMediaTalentCell.textContent = item.DuracionMediaTalent || 'N/A';
 
-            const duracionMediaProfCell = document.createElement('td');
-            duracionMediaProfCell.textContent = item.DuracionMediaProfesor || 'N/A';
+                // Añadir todas las celdas a la fila
+                row.appendChild(llaveCell);
+                row.appendChild(nombreCell);
+                row.appendChild(sesionesCell);
+                row.appendChild(profesoresCell);
+                row.appendChild(totalHorasProfCell);
+                row.appendChild(totalHorasTalentCell);
+                row.appendChild(duracionMediaProfCell);
+                row.appendChild(duracionMediaTalentCell);
 
-            const duracionMediaTalentCell = document.createElement('td');
-            duracionMediaTalentCell.textContent = item.DuracionMediaTalent || 'N/A';
-
-            // Añadir todas las celdas a la fila
-            row.appendChild(llaveCell);
-            row.appendChild(nombreCell);
-            row.appendChild(sesionesCell);
-            row.appendChild(profesoresCell);
-            row.appendChild(totalHorasProfCell);
-            row.appendChild(totalHorasTalentCell);
-            row.appendChild(duracionMediaProfCell);
-            row.appendChild(duracionMediaTalentCell);
-
-            // Añadir la fila a la tabla
-            tableBody.appendChild(row);
-        });
+                // Añadir la fila a la tabla
+                tableBody.appendChild(row);
+            });
+        }
     }
 
     function updateAsesoresResultsTable(data) {
         const tableBody = document.querySelector('#asesores-results tbody');
         tableBody.innerHTML = ''; // Limpiar la tabla antes de actualizar
+        //delete alert div if exists
+        const alertDiv = document.querySelector('.alert');
+        if (alertDiv) {
+            alertDiv.remove();
+        }
 
-        console.log('Datos recibidos para la tabla de asesores:', data);
+        const alertContainer = document.querySelector('#asesores .alert-container');
+        if (alertContainer) {
+            alertContainer.remove();
+        }
+        if (data.length === 0) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-warning mt-3';
+            alertDiv.textContent = 'No se encontraron resultados con los filtros seleccionados.';
+            const asesoresDiv = document.getElementById('asesores');
+            asesoresDiv.appendChild(alertDiv);
+        } else {
 
-        data.forEach(item => {
+            data.forEach(item => {
+                const row = document.createElement('tr');
 
-            const row = document.createElement('tr');
+                const correoCell = document.createElement('td');
+                correoCell.textContent = item.Correo || 'N/A';
 
-            const nombreCell = document.createElement('td');
-            nombreCell.textContent = item.Nombre || 'N/A';
+                const nombresCell = document.createElement('td');
+                nombresCell.textContent = item.Nombres || 'N/A';
 
-            const sesionesCell = document.createElement('td');
-            sesionesCell.textContent = item.Sesiones || 'N/A';
+                const apellidosCell = document.createElement('td');
+                apellidosCell.textContent = item.Apellidos || 'N/A';
 
-            const totalHorasProfCell = document.createElement('td');
-            totalHorasProfCell.textContent = item.TotalHorasProfesor || 'N/A';
+                const sesionesCell = document.createElement('td');
+                sesionesCell.textContent = item.Sesiones || 'N/A';
 
-            const totalHorasTalentCell = document.createElement('td');
-            totalHorasTalentCell.textContent = item.TotalHorasTalent || 'N/A';
+                const totalHorasTalentCell = document.createElement('td');
+                totalHorasTalentCell.textContent = item.TotalHorasTalent || 'N/A';
 
-            const duracionMediaProfCell = document.createElement('td');
-            duracionMediaProfCell.textContent = item.DuracionMediaProfesor || 'N/A';
+                const duracionMediaSesionCell = document.createElement('td');
+                duracionMediaSesionCell.textContent = item.DuracionMediaSesion || 'N/A';
 
-            const duracionMediaTalentCell = document.createElement('td');
-            duracionMediaTalentCell.textContent = item.DuracionMediaTalent || 'N/A';
+                const porcentajeHorasProfCell = document.createElement('td');
+                porcentajeHorasProfCell.textContent = item.PorcentajeHorasProf || 'N/A';
 
-            // Añadir todas las celdas a la fila
-            row.appendChild(nombreCell);
-            row.appendChild(sesionesCell);
-            row.appendChild(totalHorasProfCell);
-            row.appendChild(totalHorasTalentCell);
-            row.appendChild(duracionMediaProfCell);
-            row.appendChild(duracionMediaTalentCell);
+                const porcentajeHorasTalentCell = document.createElement('td');
+                porcentajeHorasTalentCell.textContent = item.PorcentajeHorasTalent || 'N/A';
 
-            // Añadir la fila a la tabla
-            tableBody.appendChild(row);
-        });
+                // Añadir todas las celdas a la fila
+                row.appendChild(correoCell);
+                row.appendChild(nombresCell);
+                row.appendChild(apellidosCell);
+                row.appendChild(sesionesCell);
+                row.appendChild(totalHorasTalentCell);
+                row.appendChild(duracionMediaSesionCell);
+                row.appendChild(porcentajeHorasProfCell);
+                row.appendChild(porcentajeHorasTalentCell);
+
+                // Añadir la fila a la tabla
+                tableBody.appendChild(row);
+            });
+        }
     }
 
     // Botón Limpiar
@@ -473,6 +547,13 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedCategorias = [];
         selectedFechaInicio = '';
         selectedFechaFin = '';
+        //delete alert div if exists
+        for (let i = 0; i < 3; i++) {
+            const alertDiv3 = document.querySelector('.alert');
+            if (alertDiv3) {
+                alertDiv3.remove();
+            }
+        }
         // Actualizar los tags de filtros
         updateFiltrosTags();
         updateFechaIntervalo();

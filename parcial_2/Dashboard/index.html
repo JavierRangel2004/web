@@ -3,17 +3,73 @@
 <head>
     <title>Dashboard</title>
     <meta charset="UTF-8">
+    <!-- Incluimos Bootstrap y los iconos -->
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
           rel="stylesheet" 
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            background-color: #2d2f36; /* Fondo gris oscuro */
+        }
+        h2, h4 {
+            font-weight: bold;
+        }
+        h2 {
+            color: #9c6ade; /* Morado claro */
+        }
+        .rounded-pill {
+            background-color: #3a3b42 !important; /* Gris oscuro para inputs */
+        }
+        .btn {
+            background-color: #9c6ade; /* Morado claro */
+            border: none;
+        }
+        .btn:hover {
+            background-color: #8a5acc; /* Morado más oscuro */
+        }
+        .cinta-resumen {
+            background-color: #9c6ade; /* Morado claro */
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #9c6ade;
+            color: #fff;
+        }
+        .nav-tabs .nav-link {
+            color: #9c6ade;
+        }
+        .table-dark {
+            background-color: #3a3b42;
+            color: #ff8fe3;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .alert-warning {
+            background-color: #9c6ade9d;
+            color: #fff;
+        }
+        .text-white {
+            color: #e4e3e3 !important; /* Texto gris claro */
+        }
+        label {
+            color: #e0e0e0;
+        }
+        select.form-select {
+            color: #87ff91;
+        }
+        input[type="date"] {
+            color: #e0e0e0;
+        }
+    </style>
 </head>
-<body class="bg-dark">
+<body>
     <div class="container-fluid">
         <div class="mx-auto mt-3 p-5">
-            <h2 style="color: #9454b4;">Ad / Asesorías / Dashboard</h2>
+            <h2>Ad / Asesorías / Dashboard</h2>
             <h4 class="text-white">Filtros</h4>
 
             <form id="filter-form" class="row mb-3 needs-validation p-3" novalidate>
@@ -46,14 +102,14 @@
                 <div class="col-md-4 d-flex align-items-center gap-2">
                     <div class="rounded-pill d-flex align-items-center px-3 bg-secondary flex-grow-1" 
                         style="height: 45px;">
-                        <span class="fw-bold me-2" style="color:#b49654">Talent:</span>
-                        <select id="asesores-select" class="form-select border-0 bg-transparent text-white" 
+                        <span class="fw-bold me-2" style="color:#8a5acc">Talent:</span>
+                        <select id="asesores-select" class="form-select border-0 bg-transparent" 
                                 style="height: 100%; flex-grow: 1;">
                             <option selected disabled value="">Seleccione un miembro</option>
                         </select>
                     </div>
                     <button id="limpiar-button" class="btn rounded-pill bi bi-trash-fill d-flex align-items-center justify-content-center text-white" 
-                            style="background-color: #b0a9a9; height: 45px; width: 130px;" type="button">
+                            style="background-color: #62ff00; height: 45px; width: 130px;" type="button">
                         Limpiar
                     </button>
                 </div>
@@ -62,8 +118,8 @@
                 <div class="col-md-6 d-flex align-items-center gap-2 mt-3">
                     <div class="rounded-pill d-flex align-items-center px-3 bg-secondary w-100" 
                         style="height: 45px;">
-                        <span class="fw-bold me-2" style="color:#b49654">Sede:</span>
-                        <select id="sedes-select" class="form-select border-0 bg-transparent text-white" 
+                        <span class="fw-bold me-2" style="color:#8a5acc">Sede:</span>
+                        <select id="sedes-select" class="form-select border-0 bg-transparent" 
                                 style="height: 100%; flex-grow: 1;">
                             <option selected disabled value="">Seleccione una sede</option>
                         </select>
@@ -74,15 +130,15 @@
                 <div class="col-md-6 d-flex align-items-center gap-2 mt-3">
                     <div class="rounded-pill d-flex align-items-center px-3 bg-secondary flex-grow-1" 
                         style="height: 45px;">
-                        <span class="fw-bold me-2" style="color:#b49654">Categorías:</span>
-                        <select id="categorias-select" class="form-select border-0 bg-transparent text-white" 
+                        <span class="fw-bold me-2" style="color:#8a5acc">Categorías:</span>
+                        <select id="categorias-select" class="form-select border-0 bg-transparent" 
                                 style="height: 100%; flex-grow: 1;">
                             <option selected disabled value="">Seleccione una categoría</option>
                         </select>
                     </div>
                 
                     <button class="btn rounded-pill bi bi-search d-flex align-items-center justify-content-center text-white" 
-                            style="background-color: #b49654; height: 45px; width: 130px;" type="submit">
+                            style="background-color: #8a5acc; height: 45px; width: 130px;" type="submit">
                         Buscar
                     </button>
                 </div>
@@ -103,7 +159,7 @@
             </div>
 
             <!-- Cinta de resumen -->
-            <div class="row mb-3 d-flex justify-content-center rounded-4 p-3" style="background-color: #b49654">
+            <div class="row mb-3 d-flex justify-content-center rounded-4 p-3 cinta-resumen">
                 <div class="col-sm-2 d-flex flex-column align-items-center">
                     <h2 id="totalSesiones" class="text-white text-center">0</h2>
                     <span class="text-white text-center">Sesiones</span>
@@ -125,6 +181,7 @@
                     <span class="text-white text-center">Profesores</span>
                 </div>
             </div>
+
 
            <!-- Pestañas de Bootstrap -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -182,24 +239,26 @@
                 </table>
                 </div>
 
-                <!-- Contenido de la pestaña Asesores -->
+                <!-- Pestaña Asesores -->
                 <div class="tab-pane fade" id="asesores" role="tabpanel" aria-labelledby="asesores-tab">
                     <h4 class="text-white mt-4">Asesores</h4>
                     <table id="asesores-results" class="table table-striped table-dark">
                         <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Sesiones</th>
-                            <th>Total Horas Prof</th>
-                            <th>Total Horas Talent</th>
-                            <th>Duración Media Prof</th>
-                            <th>Duración Media Talent</th>
-                        </tr>
+                            <tr>
+                                <th>Correo</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Sesiones</th>
+                                <th>Total Horas TALENT</th>
+                                <th>Duración Media Sesión</th>
+                                <th>% Horas Prof</th>
+                                <th>% Horas TALENT</th>
+                            </tr>
                         </thead>
                         <tbody>
+                            <!-- Aquí se insertarán los resultados -->
                         </tbody>
                     </table>
-                    </div>
                 </div>
             </div>
   
